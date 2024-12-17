@@ -8,6 +8,8 @@ from torchvision import datasets
 import torchvision.transforms.v2 as transforms
 import models
 
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
 ds_transform = transforms.Compose([
     transforms.ToImage(),
     transforms.ToDtype(torch.float32,scale=True)
@@ -44,9 +46,9 @@ for image_batch,label_batch in dataloader_test:
 
 model = models.Mymodel()
 
-acc_train = models.test_accuracy(model,dataloader_train)
+acc_train = models.test_accuracy(model,dataloader_train,device=device)
 print(f'train accuracy:{acc_train*100:.3f}%')
-acc_test = models.test_accuracy(model,dataloader_test)
+acc_test = models.test_accuracy(model,dataloader_test,device=device)
 print(f'test accuracy:{acc_test*100:.3f}%')
 
 #ロス関数の選択
@@ -69,7 +71,7 @@ for k in range(n_epochs):
     
 
     time_start = time.time()
-    loss_train = models.train(model,dataloader_train,loss_fn,optimizer)
+    loss_train = models.train(model,dataloader_train,loss_fn,optimizer,device=device)
     time_end = time.time()
     loss_train_history.append(loss_train)
     print(f'train loss:{loss_train:.3f}({time_end - time_start:.1f}s)',end = ', ')
@@ -77,21 +79,21 @@ for k in range(n_epochs):
     time_start = time.time()
     loss_train = models.train(model,dataloader_train,loss_fn,optimizer)
     time_end = time.time()
-    loss_test = models.train(model,dataloader_train,loss_fn,optimizer)
+    loss_test = models.train(model,dataloader_train,loss_fn,optimizer,device=device)
     loss_test_history.append(loss_test)
     print(f'train loss:{loss_train:.3f}({time_end - time_start:.1f}s)',end = ', ')
 
     time_start = time.time()
     loss_train = models.train(model,dataloader_train,loss_fn,optimizer)
     time_end = time.time()
-    acc_train = models.test_accuracy(model,dataloader_test)
+    acc_train = models.test_accuracy(model,dataloader_test,device=device)
     acc_train_history.append(acc_train)
     print(f'train accuracy:{acc_train*100:.3f}%({time_end - time_start:.1f}s)',end = ', ')
     
     time_start = time.time()
     loss_train = models.train(model,dataloader_train,loss_fn,optimizer)
     time_end = time.time()
-    acc_test = models.test_accuracy(model,dataloader_test)
+    acc_test = models.test_accuracy(model,dataloader_test,device=device)
     acc_test_history.append(acc_test)
     print(f'test accuracy:{acc_test*100:.3f}%({time_end - time_start:.1f}s)',end = ', ')
 
