@@ -47,6 +47,7 @@ def train(model,dataloader,loss_fn,optimizer):
         optimizer.step()#パラメータをちょっと動かす。
     return loss.item()
 
+
 def test(model,dataloader,loss_fn):
     loss_total = 0.0
 
